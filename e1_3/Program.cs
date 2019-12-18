@@ -51,12 +51,9 @@ namespace e1_3
             return name;
         }
 
-        public void PayFine(object sender, WriteFine e)
+        public void PayFine(object sender, WriteFineEventArgs e)
         {
-            Money = Money - e.;
-
-            //if (StartWriteFine != null)
-            //    StartWriteFine(this, new WriteFineEventArgs(Money));
+            Money = Money - e.Fine;
         }
     }
 
@@ -85,6 +82,7 @@ class Cop
                 tax = 500;
             }
             Console.WriteLine("You have increased speed at{0} and your fine is {1}$", delta, tax);
+            StartWriteFine(this, new WriteFineEventArgs(tax));
         }
 
         public event WriteFine StartWriteFine;
@@ -98,6 +96,10 @@ class Cop
             Cop c1 = new Cop();
             d2.StartMakeViolation += c1.AvoidMakeViolation;
             d1.StartMakeViolation += c1.AvoidMakeViolation;
+            c1.StartWriteFine += d1.PayFine;
+            c1.StartWriteFine += d2.PayFine;
+
+
 
             d1.Accelerate(60);
             d2.Accelerate(100);
